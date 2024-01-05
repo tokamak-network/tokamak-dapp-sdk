@@ -2,7 +2,7 @@
   "name": "@tokamak/titan-dapp-sdk",
   "version": "1.0.0",
   "description": "A library to hold the main logic for a dapp on Titan network",
-  "author": "Tokamak network",
+  "author": "Tokamak Network",
   "license": "GPL-3.0-or-later",
   "repository": "tokamak-network/titan-dapp-sdk",
   "main": "./__commonjs",
