@@ -19,16 +19,15 @@
     "noImplicitThis": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
     "emitDeclarationOnly": true,
     "resolveJsonModule": true,
-    "module": "ESNext"
+    "module": "ESNext",
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "test"],
   "exclude": ["node_modules", "dist"],
   "paths": {
     "apiCalls/*": ["./src/apiCalls/*"],
@@ -45,6 +44,6 @@
     "UI/*": ["./src/UI/*"],
     "utils/*": ["./src/utils/*"],
     "web/*": ["./src/web/*"],
-    "wrappers/*": ["./src/wrappers/*"]
-  }
+    "wrappers/*": ["./src/wrappers/*"],
+  },
 }

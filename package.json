@@ -144,9 +144,11 @@
     "**/*.d.ts"
   ],
   "dependencies": {
+    "@ethersproject/abstract-provider": "^5.7.0",
     "@reduxjs/toolkit": "1.8.2",
     "axios": "1.6.2",
     "bignumber.js": "9.x",
+    "ethers": "^5.7.2",
     "linkify-react": "4.0.2",
     "linkifyjs": "4.0.2",
     "lodash.debounce": "4.0.8",
@@ -160,6 +162,7 @@
     "redux-persist": "6.0.0",
     "reselect": "4.0.0",
     "shx": "0.3.4",
-    "socket.io-client": "4.6.1"
+    "socket.io-client": "4.6.1",
+    "tokamak-multichain": "^1.0.5"
   }
 }
