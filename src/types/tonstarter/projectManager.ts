@@ -15,6 +15,7 @@ export interface I_ProjectManager {
   manageInfo: ManageInfo | undefined;
   claimInfo: ClaimInfo | undefined;
   status: Status | undefined;
+  isSet: boolean;
 }
 
 export type ProjectInfo = {
@@ -67,6 +68,7 @@ export type ClaimInfo = {
 
 export type Status = {
   currentStep: "snapshot" | "whitelist" | "round1" | "round2" | "claim";
+  currentStepEndDate: number;
   nextStep: "whitelist" | "round1" | "round2" | "claim";
   nextStepDate: number;
 };

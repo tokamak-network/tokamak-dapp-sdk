@@ -14,6 +14,7 @@ import SaleVaultProxyABI from "../constants/abis/L2PublicSaleVaultProxy.json";
 import { convertTimeFromBN } from "utils/time";
 import { filterObjectData } from "utils/contract";
 import { filterContractData } from "./utils/filterContractData";
+import { getStatus } from "./utils/schedule";
 
 export class ProjectManager implements I_ProjectManager {
   chainId: number;
@@ -29,6 +30,7 @@ export class ProjectManager implements I_ProjectManager {
   manageInfo: ManageInfo | undefined;
   claimInfo: ClaimInfo | undefined;
   status: Status | undefined;
+  isSet: boolean;
 
   constructor(opts: { chainId: number; l2Token: string; provider?: Provider }) {
     this.chainId = opts.chainId;
@@ -40,13 +42,13 @@ export class ProjectManager implements I_ProjectManager {
       "L2ProjectManagerProxy",
     );
     this.provider = opts.provider ?? TokamakChainSDK.provider;
+    this.isSet = false;
   }
 
   public async syncData() {
-    const syncingData = await Promise.all([
-      this.fetchProjectInfo(),
-      this.fetchSaleInfo(),
-    ]);
+    await Promise.all([this.fetchProjectInfo(), this.fetchSaleInfo()]);
+    await this.fetchStatus();
+    this.setIsSet(this.status !== undefined);
   }
 
   private async fetchProjectInfo() {
@@ -93,6 +95,13 @@ export class ProjectManager implements I_ProjectManager {
     this.setClaimInfo(claimInfo);
   }
 
+  private async fetchStatus() {
+    if (this.timeInfo && this.claimInfo) {
+      const status = getStatus(this.timeInfo, this.claimInfo);
+      if (status) this.setStatus(status);
+    }
+  }
+
   private setProjectInfo(projectInfo: ProjectInfo) {
     this.projectInfo = projectInfo;
   }
@@ -110,5 +119,8 @@ export class ProjectManager implements I_ProjectManager {
   }
   private setStatus(status: Status) {
     this.status = status;
+  }
+  private setIsSet(isSet: boolean) {
+    this.isSet = isSet;
   }
 }

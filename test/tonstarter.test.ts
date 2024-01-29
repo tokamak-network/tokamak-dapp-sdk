@@ -1,4 +1,5 @@
 import { ProjectManager } from "tonstarter";
+import { getCurrentTime } from "utils/time";
 
 const test = async () => {
   const projectManager = new ProjectManager({
@@ -6,9 +7,11 @@ const test = async () => {
     l2Token: "0xc1c838f11a4f8420245f278c3c2592f0798111ec",
   });
   await projectManager.syncData();
-  console.log(projectManager.projectInfo);
-  console.log(projectManager.manageInfo);
-  console.log(projectManager.saleInfo);
-  console.log(projectManager.claimInfo);
+  // console.log(projectManager.projectInfo);
+  // console.log(projectManager.manageInfo);
+  // console.log(projectManager.saleInfo);
+  // console.log(projectManager.claimInfo);
+  console.log(projectManager.status);
+  console.log(projectManager.isSet);
 };
 test();
