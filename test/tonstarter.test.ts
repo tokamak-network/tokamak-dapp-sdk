@@ -1,5 +1,4 @@
 import { ProjectManager } from "tonstarter";
-import { getCurrentTime } from "utils/time";
 
 const test = async () => {
   const projectManager = new ProjectManager({

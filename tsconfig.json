@@ -27,7 +27,7 @@
     "resolveJsonModule": true,
     "module": "ESNext",
   },
-  "include": ["src/**/*", "test"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"],
   "paths": {
     "apiCalls/*": ["./src/apiCalls/*"],
@@ -37,7 +37,6 @@
     "hooks/*": ["./src/hooks/*"],
     "models/*": ["./src/models/*"],
     "providers/*": ["./src/providers/*"],
-    "reduxStore/*": ["./src/reduxStore/*"],
     "services/*": ["./src/services/*"],
     "storage/*": ["./src/storage/*"],
     "types/*": ["./src/types/*"],
