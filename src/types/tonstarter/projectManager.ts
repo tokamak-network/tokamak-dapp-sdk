@@ -66,6 +66,33 @@ export type ClaimInfo = {
   claimInterval: number;
 };
 
+export type UserInfo_whitelist = {
+  tier: any;
+};
+
+export type UserInfo_round1 = {
+  paid: Number;
+  puchased: Number;
+};
+
+export type UserInfo_round2 = {
+  paid: Number;
+  puchased: Number;
+};
+
+export type UserInfo_claim = {
+  paid: Number;
+  puchased: Number;
+};
+
+export type UserInfoMap = {
+  snpashot: undefined;
+  whitelist: UserInfo_whitelist;
+  round1: UserInfo_round1;
+  round2: UserInfo_round2;
+  claim: UserInfo_claim;
+};
+
 export type Status = {
   currentStep: "snapshot" | "whitelist" | "round1" | "round2" | "claim";
   currentStepEndDate: number;
