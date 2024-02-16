@@ -58,6 +58,7 @@ export class ProjectManager implements I_ProjectManager {
       await Promise.all([this.fetchProjectInfo(), this.fetchSaleInfo()]);
       await this.fetchStatus();
       this.setIsSet(this.status !== undefined);
+      await this.fetchUserInfo();
     } catch (e) {
       this.setIsSet(false);
       throw new Error("**Error happened while syncing datas**");
