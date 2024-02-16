@@ -67,7 +67,7 @@ export type ClaimInfo = {
 };
 
 export type UserInfo_whitelist = {
-  tier: any;
+  tier: number;
 };
 
 export type UserInfo_round1 = {
@@ -81,8 +81,7 @@ export type UserInfo_round2 = {
 };
 
 export type UserInfo_claim = {
-  paid: Number;
-  puchased: Number;
+  claimableAmount: Number;
 };
 
 export type UserInfoMap = {
