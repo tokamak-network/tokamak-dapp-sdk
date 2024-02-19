@@ -68,29 +68,25 @@ export type ClaimInfo = {
 
 export type UserInfo_whitelist = {
   tier: number;
+  isWhitelisted: boolean;
 };
 
 export type UserInfo_round1 = {
-  paid: Number;
-  puchased: Number;
+  paidRound1: number;
+  purchasedRound1: number;
 };
 
 export type UserInfo_round2 = {
-  paid: Number;
-  puchased: Number;
+  paidRound2: number;
 };
 
 export type UserInfo_claim = {
-  claimableAmount: Number;
+  claimableAmount: number;
 };
 
-export type UserInfoMap = {
-  snpashot: undefined;
-  whitelist: UserInfo_whitelist;
-  round1: UserInfo_round1;
-  round2: UserInfo_round2;
-  claim: UserInfo_claim;
-};
+export type UserInfo =
+  | (UserInfo_whitelist & UserInfo_round1 & UserInfo_round2 & UserInfo_claim)
+  | undefined;
 
 export type Status = {
   currentStep: "snapshot" | "whitelist" | "round1" | "round2" | "claim";

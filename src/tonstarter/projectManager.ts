@@ -6,7 +6,7 @@ import {
   SaleInfo,
   Status,
   TimeInfo,
-  UserInfoMap,
+  UserInfo,
 } from "types/tonstarter";
 import { MultiChainSDK } from "tokamak-multichain";
 import { Contract } from "ethers";
@@ -30,9 +30,13 @@ export class ProjectManager implements I_ProjectManager {
   saleInfo: SaleInfo | undefined;
   manageInfo: ManageInfo | undefined;
   claimInfo: ClaimInfo | undefined;
-  userInfo: UserInfoMap[keyof UserInfoMap];
+  userInfo: UserInfo;
   status: Status | undefined;
   isSet: boolean;
+
+  get test(): ClaimInfo {
+    return this.claimInfo as ClaimInfo;
+  }
 
   constructor(opts: {
     chainId: number;
@@ -57,7 +61,6 @@ export class ProjectManager implements I_ProjectManager {
     try {
       await Promise.all([this.fetchProjectInfo(), this.fetchSaleInfo()]);
       await this.fetchStatus();
-      this.setIsSet(this.status !== undefined);
       await this.fetchUserInfo();
     } catch (e) {
       this.setIsSet(false);
@@ -70,7 +73,7 @@ export class ProjectManager implements I_ProjectManager {
       this.l2Token,
     );
     if (projectInfoData) {
-      const projectInfo = {
+      const projectInfo: ProjectInfo = {
         name: projectInfoData.projectName,
         owner: projectInfoData.projectOwner,
         l1Token: projectInfoData.l1Token,
@@ -113,6 +116,7 @@ export class ProjectManager implements I_ProjectManager {
     if (this.timeInfo && this.claimInfo) {
       const status = getStatus(this.timeInfo, this.claimInfo);
       if (status) this.setStatus(status);
+      this.setIsSet(status !== undefined);
     }
   }
 
@@ -124,47 +128,39 @@ export class ProjectManager implements I_ProjectManager {
     switch (this.status.currentStep) {
       case "snapshot":
         return this.setUserInfo(undefined);
-      case "whitelist":
-        const tier = await this.SaleVaultProxy.calculTier(
-          this.l2Token,
-          this.account,
-        );
-        return this.setUserInfo({
-          tier: Number(tier.toString()),
-        });
-      case "round1":
-        const round1Info = await this.SaleVaultProxy.user1rd(
-          this.l2Token,
-          this.account,
-        );
-        const userInfoRound1 = {
-          paid: Number(formatEther(round1Info.payAmount)),
-          puchased: Number(formatEther(round1Info.saleAmount)),
-        };
-        return this.setUserInfo(userInfoRound1);
-      case "round2":
-        const round2Info = await this.SaleVaultProxy.user2rd(
-          this.l2Token,
-          this.account,
-        );
-        const userInfoRound2 = {
-          paid: Number(formatEther(round2Info.depositAmount)),
-          puchased: 0,
-        };
-        return this.setUserInfo(userInfoRound2);
+      default:
+        const [tier, round1Info, round2Info, claimableAmount] =
+          await Promise.all([
+            this.SaleVaultProxy.calculTier(this.l2Token, this.account),
+            this.SaleVaultProxy.user1rd(this.l2Token, this.account),
+            this.SaleVaultProxy.user2rd(this.l2Token, this.account),
+            this.SaleVaultProxy.calculClaimAmount(
+              this.l2Token,
+              this.account,
+              0,
+            ),
+          ]);
 
-      case "claim":
-        const claimableAmount = await this.SaleVaultProxy.calculClaimAmount(
-          this.l2Token,
-          this.account,
-          0,
-        );
+        const userInfoRound1 = {
+          paidRound1: Number(formatEther(round1Info.payAmount)),
+          purchasedRound1: Number(formatEther(round1Info.saleAmount)),
+        };
+
+        const userInfoRound2 = {
+          paidRound2: Number(formatEther(round2Info.depositAmount)),
+        };
+
         const claimInfo = {
           claimableAmount: Number(formatEther(claimableAmount)),
         };
-        return this.setUserInfo(claimInfo);
-      default:
-        return this.setUserInfo(undefined);
+
+        return this.setUserInfo({
+          tier: Number(tier.toString()),
+          isWhitelisted: round1Info.join,
+          ...userInfoRound1,
+          ...userInfoRound2,
+          ...claimInfo,
+        });
     }
   }
 
@@ -194,7 +190,7 @@ export class ProjectManager implements I_ProjectManager {
     }
   }
 
-  private setUserInfo(userInfo: UserInfoMap[keyof UserInfoMap]) {
+  private setUserInfo(userInfo: UserInfo) {
     this.userInfo = userInfo;
   }
 
