@@ -7,6 +7,7 @@ import {
   Status,
   TimeInfo,
   UserInfo,
+  TokenInfo,
 } from "types/tonstarter";
 import { MultiChainSDK } from "tokamak-multichain";
 import { Contract } from "ethers";
@@ -17,21 +18,52 @@ import { getStatus } from "./utils/schedule";
 import { formatEther, parseEther } from "ethers/lib/utils";
 
 export class ProjectManager implements I_ProjectManager {
+  /** A number representing the ID of the blockchain chain. */
   chainId: number;
+
+  /** A string representing the Layer 2 token. */
   l2Token: string;
+
+  /** A string representing the user's account. */
   account: string | undefined;
+
+  /** A Contract object for interacting with the Layer 2 Project Manager smart contract. */
   L2ProjectManagerProxy: Contract;
+
+  /** A Contract object for interacting with the Sale Vault smart contract. */
   SaleVaultProxy: Contract | undefined;
+
+  /** A Provider object for interacting with the Ethereum network. */
   provider: Provider;
 
+  /** A Map object for caching data. */
   cache: Map<string, any>;
+
+  /** A ProjectInfo object containing information about the project. */
   projectInfo: ProjectInfo | undefined;
+
+  /** A TimeInfo object containing time-related information. */
   timeInfo: TimeInfo | undefined;
+
+  /** A SaleInfo object containing information about the sale. */
   saleInfo: SaleInfo | undefined;
+
+  /** A ManageInfo object containing management-related information. */
   manageInfo: ManageInfo | undefined;
+
+  /** A ClaimInfo object containing information about claims. */
   claimInfo: ClaimInfo | undefined;
+
+  /** A UserInfo object, containing information about the user. */
   userInfo: UserInfo;
+
+  /** A TokenInfo object containing information about the token. */
+  tokenInfo: TokenInfo | undefined;
+
+  /** A Status object representing the status of the project. */
   status: Status | undefined;
+
+  /** A boolean indicating whether the project has been set or not. */
   isSet: boolean;
 
   get test(): ClaimInfo {
@@ -100,6 +132,13 @@ export class ProjectManager implements I_ProjectManager {
         this.SaleVaultProxy.manageInfo(this.l2Token),
         this.SaleVaultProxy.claimInfo(this.l2Token),
       ]);
+    console.log(
+      "raw data :",
+      timeInfoData,
+      saleInfoData,
+      manageInfoData,
+      claimInfoData,
+    );
     const { timeInfo, saleInfo, manageInfo, claimInfo } = filterContractData({
       timeInfoData,
       saleInfoData,
@@ -208,6 +247,9 @@ export class ProjectManager implements I_ProjectManager {
   }
   private setClaimInfo(claimInfo: ClaimInfo) {
     this.claimInfo = claimInfo;
+  }
+  private setTokenInfo(tokenInfo: TokenInfo) {
+    this.tokenInfo = tokenInfo;
   }
   private setStatus(status: Status) {
     this.status = status;

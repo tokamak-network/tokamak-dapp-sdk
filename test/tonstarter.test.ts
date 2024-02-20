@@ -5,8 +5,8 @@ const test = async () => {
   console.log("**test started**");
   const projectManager = new ProjectManager({
     chainId: 5050,
-    l2Token: "0xc1c838f11a4f8420245f278c3c2592f0798111ec",
-    account: "0x8c595DA827F4182bC0E3917BccA8e654DF8223E1",
+    l2Token: "0x7fc338ae8e5f4a36d6507d6cdb56c26e04a8919e",
+    account: "0xAA5a562B2C3CA302aFa35db0b94738A7384d6aA3",
   });
   await projectManager.syncData();
   console.log(projectManager.projectInfo);

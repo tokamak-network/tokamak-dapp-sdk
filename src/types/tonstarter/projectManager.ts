@@ -14,6 +14,7 @@ export interface I_ProjectManager {
   saleInfo: SaleInfo | undefined;
   manageInfo: ManageInfo | undefined;
   claimInfo: ClaimInfo | undefined;
+  tokenInfo: TokenInfo | undefined;
   status: Status | undefined;
   isSet: boolean;
 }
@@ -93,4 +94,10 @@ export type Status = {
   currentStepEndDate: number;
   nextStep: "whitelist" | "round1" | "round2" | "claim";
   nextStepDate: number;
+};
+
+export type TokenInfo = {
+  tokenName: string;
+  tokenSymbol: string;
+  tokenTotalSupply: number;
 };
