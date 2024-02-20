@@ -13,6 +13,7 @@ import { MultiChainSDK } from "tokamak-multichain";
 import { Contract } from "ethers";
 import { Provider } from "@ethersproject/abstract-provider";
 import SaleVaultProxyABI from "../constants/abis/L2PublicSaleVaultProxy.json";
+import ERC20ABI from "../constants/abis/ERC20.json";
 import { filterContractData } from "./utils/filterContractData";
 import { getStatus } from "./utils/schedule";
 import { formatEther, parseEther } from "ethers/lib/utils";
@@ -32,6 +33,9 @@ export class ProjectManager implements I_ProjectManager {
 
   /** A Contract object for interacting with the Sale Vault smart contract. */
   SaleVaultProxy: Contract | undefined;
+
+  /** A Contract object for interacting with the Sale Vault smart contract. */
+  TokenContract: Contract;
 
   /** A Provider object for interacting with the Ethereum network. */
   provider: Provider;
@@ -86,18 +90,40 @@ export class ProjectManager implements I_ProjectManager {
       "L2ProjectManagerProxy",
     );
     this.provider = opts.provider ?? TokamakChainSDK.provider;
+    this.TokenContract = new Contract(
+      this.l2Token,
+      ERC20ABI.abi,
+      this.provider,
+    );
     this.isSet = false;
   }
 
   public async syncData() {
     try {
-      await Promise.all([this.fetchProjectInfo(), this.fetchSaleInfo()]);
+      await Promise.all([
+        this.fetchProjectInfo(),
+        this.fetchSaleInfo(),
+        this.fetchTokenInfo(),
+      ]);
       await this.fetchStatus();
       await this.fetchUserInfo();
     } catch (e) {
       this.setIsSet(false);
       throw new Error("**Error happened while syncing datas**");
     }
+  }
+
+  private async fetchTokenInfo() {
+    const [name, symbol, totalSupply] = await Promise.all([
+      this.TokenContract.name(),
+      this.TokenContract.symbol(),
+      this.TokenContract.totalSupply(),
+    ]);
+    this.setTokenInfo({
+      tokenName: name,
+      tokenSymbol: symbol,
+      totalSupply: Number(formatEther(totalSupply)),
+    });
   }
 
   private async fetchProjectInfo() {

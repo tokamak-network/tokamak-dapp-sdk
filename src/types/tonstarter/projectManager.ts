@@ -6,6 +6,7 @@ export interface I_ProjectManager {
   l2Token: string;
   L2ProjectManagerProxy: Contract;
   SaleVaultProxy: Contract | undefined;
+  TokenContract: Contract;
   provider: Provider;
 
   cache: Map<string, any>;
@@ -99,5 +100,5 @@ export type Status = {
 export type TokenInfo = {
   tokenName: string;
   tokenSymbol: string;
-  tokenTotalSupply: number;
+  totalSupply: number;
 };
