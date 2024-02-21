@@ -19,6 +19,7 @@ export const getStatus = (
             : key === "round2StartTime"
               ? "round2"
               : "claim";
+
       const currentStepEndDate =
         currentStep === "snapshot"
           ? timeInfo.snapshot

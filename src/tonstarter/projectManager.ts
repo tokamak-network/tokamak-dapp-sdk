@@ -109,6 +109,7 @@ export class ProjectManager implements I_ProjectManager {
       await this.fetchUserInfo();
     } catch (e) {
       this.setIsSet(false);
+      console.log(e);
       throw new Error("**Error happened while syncing datas**");
     }
   }
@@ -158,19 +159,14 @@ export class ProjectManager implements I_ProjectManager {
         this.SaleVaultProxy.manageInfo(this.l2Token),
         this.SaleVaultProxy.claimInfo(this.l2Token),
       ]);
-    console.log(
-      "raw data :",
-      timeInfoData,
-      saleInfoData,
-      manageInfoData,
-      claimInfoData,
-    );
+
     const { timeInfo, saleInfo, manageInfo, claimInfo } = filterContractData({
       timeInfoData,
       saleInfoData,
       manageInfoData,
       claimInfoData,
     });
+
     this.setTimeInfo(timeInfo);
     this.setSaleInfo(saleInfo);
     this.setManageInfo(manageInfo);
@@ -202,7 +198,7 @@ export class ProjectManager implements I_ProjectManager {
             this.SaleVaultProxy.calculClaimAmount(
               this.l2Token,
               this.account,
-              0,
+              1,
             ),
           ]);
 
@@ -218,6 +214,8 @@ export class ProjectManager implements I_ProjectManager {
         const claimInfo = {
           claimableAmount: Number(formatEther(claimableAmount)),
         };
+
+        console.log();
 
         return this.setUserInfo({
           tier: Number(tier.toString()),

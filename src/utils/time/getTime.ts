@@ -1,4 +1,4 @@
 export const getCurrentTime = () => {
   //milliseconds
-  return Date.now();
+  return Math.floor(Date.now() / 1000);
 };

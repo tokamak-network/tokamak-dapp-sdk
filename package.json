@@ -1,6 +1,6 @@
 {
   "name": "tokamak-dapp-sdk",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A library to hold the main logic for a dapp on Titan network",
   "author": "Tokamak Network",
   "license": "GPL-3.0-or-later",
@@ -160,6 +160,6 @@
     "reselect": "4.0.0",
     "shx": "0.3.4",
     "socket.io-client": "4.6.1",
-    "tokamak-multichain": "^1.0.5"
+    "tokamak-multichain": "^1.1.4"
   }
 }
