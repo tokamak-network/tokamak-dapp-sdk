@@ -37,7 +37,7 @@ projectManager.isSet;
 
 The `ProjectManager` class has the following member variables:
 
-- `chainId`: A number representing the chain ID **1, 5, 5050, and 55004**.
+- `chainId`: A number representing the chain ID **5, 5050**.
 - `l2Token`: A string representing the Layer 2 token, which was created by [TONStarter](https://github.com/tokamak-network/TONStarter-sdk).
 - `account`: A string representing the user's account.
 - `L2ProjectManagerProxy`: A Contract object for interacting with the Layer 2 Project Manager.
