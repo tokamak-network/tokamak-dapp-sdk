@@ -212,7 +212,7 @@ export class ProjectManager implements I_ProjectManager {
         };
 
         const claimInfo = {
-          claimableAmount: Number(formatEther(claimableAmount)),
+          claimableAmount: Number(formatEther(claimableAmount._totalClaim)),
         };
 
         console.log();

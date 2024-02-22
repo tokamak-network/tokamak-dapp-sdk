@@ -1,12 +1,12 @@
-import { ProjectManager } from "../dist/__commonjs/tonstarter";
-// import { ProjectManager } from "../src/tonstarter";
+// import { ProjectManager } from "../dist/__commonjs/tonstarter";
+import { ProjectManager } from "../src/tonstarter";
 
 const test = async () => {
   console.log("**test started**");
   const projectManager = new ProjectManager({
     chainId: 5050,
-    l2Token: "0xAf3966fC0C5a1Ef8d29d69E3E6Ef0B9C74dE5f84",
-    account: "0xAA5a562B2C3CA302aFa35db0b94738A7384d6aA3",
+    l2Token: "0xd5453568dd56c81af8529e6ae4d9103d966dc2e3",
+    account: "0x8c595DA827F4182bC0E3917BccA8e654DF8223E1",
   });
 
   await projectManager.syncData();
