@@ -8,6 +8,7 @@ import {
   TimeInfo,
   UserInfo,
   TokenInfo,
+  TierInfo,
 } from "types/tonstarter";
 import { MultiChainSDK } from "tokamak-multichain";
 import { Contract } from "ethers";
@@ -34,7 +35,7 @@ export class ProjectManager implements I_ProjectManager {
   /** A Contract object for interacting with the Sale Vault smart contract. */
   SaleVaultProxy: Contract | undefined;
 
-  /** A Contract object for interacting with the Sale Vault smart contract. */
+  /** A Contract object for interacting with the Project Token smart contract. */
   TokenContract: Contract;
 
   /** A Provider object for interacting with the Ethereum network. */
@@ -63,6 +64,9 @@ export class ProjectManager implements I_ProjectManager {
 
   /** A TokenInfo object containing information about the token. */
   tokenInfo: TokenInfo | undefined;
+
+  /** A TokenInfo object containing information about the token. */
+  tierInfo: TierInfo | undefined;
 
   /** A Status object representing the status of the project. */
   status: Status | undefined;
@@ -152,13 +156,25 @@ export class ProjectManager implements I_ProjectManager {
         this.provider,
       );
     }
-    const [timeInfoData, saleInfoData, manageInfoData, claimInfoData] =
-      await Promise.all([
-        this.SaleVaultProxy.timeInfo(this.l2Token),
-        this.SaleVaultProxy.saleInfo(this.l2Token),
-        this.SaleVaultProxy.manageInfo(this.l2Token),
-        this.SaleVaultProxy.claimInfo(this.l2Token),
-      ]);
+    const [
+      timeInfoData,
+      saleInfoData,
+      manageInfoData,
+      claimInfoData,
+      tier1,
+      tier2,
+      tier3,
+      tier4,
+    ] = await Promise.all([
+      this.SaleVaultProxy.timeInfo(this.l2Token),
+      this.SaleVaultProxy.saleInfo(this.l2Token),
+      this.SaleVaultProxy.manageInfo(this.l2Token),
+      this.SaleVaultProxy.claimInfo(this.l2Token),
+      this.SaleVaultProxy.tiersPercents(this.l2Token, 1),
+      this.SaleVaultProxy.tiersPercents(this.l2Token, 2),
+      this.SaleVaultProxy.tiersPercents(this.l2Token, 3),
+      this.SaleVaultProxy.tiersPercents(this.l2Token, 4),
+    ]);
 
     const { timeInfo, saleInfo, manageInfo, claimInfo } = filterContractData({
       timeInfoData,
@@ -167,10 +183,26 @@ export class ProjectManager implements I_ProjectManager {
       claimInfoData,
     });
 
+    const tier1Percentage = tier1 / 100;
+    const tier2Percentage = tier2 / 100;
+    const tier3Percentage = tier3 / 100;
+    const tier4Percentage = tier4 / 100;
+
+    const ratio1 = manageInfo.set1rdTokenAmount * tier1Percentage;
+    const ratio2 = manageInfo.set1rdTokenAmount * tier2Percentage;
+    const ratio3 = manageInfo.set1rdTokenAmount * tier3Percentage;
+    const ratio4 = manageInfo.set1rdTokenAmount * tier4Percentage;
+
     this.setTimeInfo(timeInfo);
     this.setSaleInfo(saleInfo);
     this.setManageInfo(manageInfo);
     this.setClaimInfo(claimInfo);
+    this.setTierInfo({
+      1: { amount: ratio1, percent: tier1Percentage },
+      2: { amount: ratio2, percent: tier2Percentage },
+      3: { amount: ratio3, percent: tier3Percentage },
+      4: { amount: ratio4, percent: tier4Percentage },
+    });
   }
 
   private async fetchStatus() {
@@ -190,6 +222,13 @@ export class ProjectManager implements I_ProjectManager {
       case "snapshot":
         return this.setUserInfo(undefined);
       default:
+        // const lockTOSAddress = await this.SaleVaultProxy.lockTOS();
+        // const LockTOS = new Contract(
+        //   lockTOSAddress,
+        //   ERC20ABI.abi,
+        //   this.provider,
+        // );
+
         const [tier, round1Info, round2Info, claimableAmount] =
           await Promise.all([
             this.SaleVaultProxy.calculTier(this.l2Token, this.account),
@@ -214,8 +253,6 @@ export class ProjectManager implements I_ProjectManager {
         const claimInfo = {
           claimableAmount: Number(formatEther(claimableAmount._totalClaim)),
         };
-
-        console.log();
 
         return this.setUserInfo({
           tier: Number(tier.toString()),
@@ -274,6 +311,9 @@ export class ProjectManager implements I_ProjectManager {
   }
   private setTokenInfo(tokenInfo: TokenInfo) {
     this.tokenInfo = tokenInfo;
+  }
+  private setTierInfo(tierInfo: TierInfo) {
+    this.tierInfo = tierInfo;
   }
   private setStatus(status: Status) {
     this.status = status;

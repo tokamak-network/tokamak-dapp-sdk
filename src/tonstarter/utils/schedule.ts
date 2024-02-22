@@ -52,6 +52,37 @@ export const getStatus = (
         nextStepDate,
       };
     }
+    if (key === "round2EndTime" && nowTime > value) {
+      const lastClaimTime =
+        claimInfo.secondClaimTime +
+        claimInfo.claimInterval * (claimInfo.totalClaimCounts - 2);
+      const isPassedLastClaimTime = nowTime > lastClaimTime;
+
+      let currentStepEndDate = 0;
+
+      for (let i = 0; i < claimInfo.totalClaimCounts; i++) {
+        const nowTime = getCurrentTime();
+
+        const time =
+          claimInfo.firstClaimTime + (i + 1) * claimInfo.totalClaimCounts;
+
+        if (time > nowTime) {
+          currentStepEndDate = time;
+          break;
+        }
+      }
+
+      currentStepEndDate = isPassedLastClaimTime
+        ? lastClaimTime
+        : currentStepEndDate;
+
+      return {
+        currentStep: "claim",
+        currentStepEndDate,
+        nextStep: "claim",
+        nextStepDate: currentStepEndDate,
+      };
+    }
   }
   return undefined;
 };

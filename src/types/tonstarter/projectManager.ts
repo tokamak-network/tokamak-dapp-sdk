@@ -16,6 +16,7 @@ export interface I_ProjectManager {
   manageInfo: ManageInfo | undefined;
   claimInfo: ClaimInfo | undefined;
   tokenInfo: TokenInfo | undefined;
+  tierInfo: TierInfo | undefined;
   status: Status | undefined;
   isSet: boolean;
 }
@@ -101,4 +102,23 @@ export type TokenInfo = {
   tokenName: string;
   tokenSymbol: string;
   totalSupply: number;
+};
+
+export type TierInfo = {
+  1: {
+    percent: number;
+    amount: number;
+  };
+  2: {
+    percent: number;
+    amount: number;
+  };
+  3: {
+    percent: number;
+    amount: number;
+  };
+  4: {
+    percent: number;
+    amount: number;
+  };
 };
