@@ -18,7 +18,6 @@ import ERC20ABI from "../constants/abis/ERC20.json";
 import { filterContractData } from "./utils/filterContractData";
 import { getStatus } from "./utils/schedule";
 import { formatEther, parseEther } from "ethers/lib/utils";
-
 export class ProjectManager implements I_ProjectManager {
   /** A number representing the ID of the blockchain chain. */
   chainId: number;
@@ -89,7 +88,10 @@ export class ProjectManager implements I_ProjectManager {
     this.account = opts.account;
     this.cache = new Map<string, any>();
 
-    const TokamakChainSDK = new MultiChainSDK({ chainId: opts.chainId });
+    const TokamakChainSDK = new MultiChainSDK({
+      chainId: opts.chainId,
+      signerOrProvider: opts.provider,
+    });
     this.L2ProjectManagerProxy = TokamakChainSDK.getContract(
       "L2ProjectManagerProxy",
     );

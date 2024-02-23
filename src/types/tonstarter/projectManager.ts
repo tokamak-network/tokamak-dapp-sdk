@@ -122,3 +122,15 @@ export type TierInfo = {
     amount: number;
   };
 };
+
+export type Vault = {
+  totalAmount: number;
+};
+
+export type VaultInfo = {
+  Sale: Vault;
+  Liquidity: Vault;
+  Ecosystem: Vault;
+  Team: Vault;
+  TONStarter: Vault;
+};
