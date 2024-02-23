@@ -31,6 +31,12 @@ projectManager.tokenInfo;
 projectManager.status;
 projectManager.isSet;
 
+/**
+ * Automatically invokes the necessary action functions corresponding to each step 
+ * such as whitelist registration, participation in public sale 1, and participation in public sale 2
+ */
+await projectManager.participate()
+
 ```
 
 ## Member Variables
