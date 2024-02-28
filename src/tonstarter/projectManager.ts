@@ -9,6 +9,7 @@ import {
   UserInfo,
   TokenInfo,
   TierInfo,
+  VaultInfo,
 } from "types/tonstarter";
 import { MultiChainSDK } from "tokamak-multichain";
 import { Contract } from "ethers";
@@ -44,31 +45,34 @@ export class ProjectManager implements I_ProjectManager {
   cache: Map<string, any>;
 
   /** A ProjectInfo object containing information about the project. */
-  projectInfo: ProjectInfo | undefined;
+  projectInfo?: ProjectInfo;
 
   /** A TimeInfo object containing time-related information. */
-  timeInfo: TimeInfo | undefined;
+  timeInfo?: TimeInfo;
 
   /** A SaleInfo object containing information about the sale. */
-  saleInfo: SaleInfo | undefined;
+  saleInfo?: SaleInfo;
 
   /** A ManageInfo object containing management-related information. */
-  manageInfo: ManageInfo | undefined;
+  manageInfo?: ManageInfo;
 
   /** A ClaimInfo object containing information about claims. */
-  claimInfo: ClaimInfo | undefined;
+  claimInfo?: ClaimInfo;
 
   /** A UserInfo object, containing information about the user. */
   userInfo: UserInfo;
 
   /** A TokenInfo object containing information about the token. */
-  tokenInfo: TokenInfo | undefined;
+  tokenInfo?: TokenInfo;
+
+  /** A TokenInfo object containing information about the vaults. */
+  vaultInfo?: VaultInfo;
 
   /** A TokenInfo object containing information about the token. */
-  tierInfo: TierInfo | undefined;
+  tierInfo?: TierInfo;
 
   /** A Status object representing the status of the project. */
-  status: Status | undefined;
+  status?: Status;
 
   /** A boolean indicating whether the project has been set or not. */
   isSet: boolean;
@@ -231,17 +235,17 @@ export class ProjectManager implements I_ProjectManager {
         //   this.provider,
         // );
 
-        const [tier, round1Info, round2Info, claimableAmount] =
-          await Promise.all([
-            this.SaleVaultProxy.calculTier(this.l2Token, this.account),
-            this.SaleVaultProxy.user1rd(this.l2Token, this.account),
-            this.SaleVaultProxy.user2rd(this.l2Token, this.account),
-            this.SaleVaultProxy.calculClaimAmount(
-              this.l2Token,
-              this.account,
-              1,
-            ),
-          ]);
+        const [
+          // tier,
+          round1Info,
+          round2Info,
+          claimableAmount,
+        ] = await Promise.all([
+          // this.SaleVaultProxy.calculTier(this.l2Token, this.account),
+          this.SaleVaultProxy.user1rd(this.l2Token, this.account),
+          this.SaleVaultProxy.user2rd(this.l2Token, this.account),
+          this.SaleVaultProxy.calculClaimAmount(this.l2Token, this.account, 1),
+        ]);
 
         const userInfoRound1 = {
           paidRound1: Number(formatEther(round1Info.payAmount)),
@@ -316,6 +320,9 @@ export class ProjectManager implements I_ProjectManager {
   }
   private setTierInfo(tierInfo: TierInfo) {
     this.tierInfo = tierInfo;
+  }
+  private setVaultInfo(vaultInfo: VaultInfo) {
+    this.vaultInfo = vaultInfo;
   }
   private setStatus(status: Status) {
     this.status = status;

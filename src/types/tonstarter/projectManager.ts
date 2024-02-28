@@ -5,19 +5,20 @@ export interface I_ProjectManager {
   chainId: number;
   l2Token: string;
   L2ProjectManagerProxy: Contract;
-  SaleVaultProxy: Contract | undefined;
+  SaleVaultProxy?: Contract;
   TokenContract: Contract;
   provider: Provider;
 
   cache: Map<string, any>;
-  projectInfo: ProjectInfo | undefined;
-  timeInfo: TimeInfo | undefined;
-  saleInfo: SaleInfo | undefined;
-  manageInfo: ManageInfo | undefined;
-  claimInfo: ClaimInfo | undefined;
-  tokenInfo: TokenInfo | undefined;
-  tierInfo: TierInfo | undefined;
-  status: Status | undefined;
+  projectInfo?: ProjectInfo;
+  timeInfo?: TimeInfo;
+  saleInfo?: SaleInfo;
+  manageInfo?: ManageInfo;
+  claimInfo?: ClaimInfo;
+  tokenInfo?: TokenInfo;
+  tierInfo?: TierInfo;
+  vaultInfo?: VaultInfo;
+  status?: Status;
   isSet: boolean;
 }
 
@@ -124,7 +125,7 @@ export type TierInfo = {
 };
 
 export type Vault = {
-  totalAmount: number;
+  allocatedAmount: number;
 };
 
 export type VaultInfo = {
