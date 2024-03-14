@@ -22,6 +22,7 @@ const test = async () => {
   console.log(projectManager.isSet);
   console.log(projectManager.tokenInfo);
   console.log(projectManager.tierInfo);
+  console.log(projectManager.userInfo);
 };
 
 test();

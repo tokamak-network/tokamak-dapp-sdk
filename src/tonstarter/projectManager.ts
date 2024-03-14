@@ -235,17 +235,17 @@ export class ProjectManager implements I_ProjectManager {
         //   this.provider,
         // );
 
-        const [
-          // tier,
-          round1Info,
-          round2Info,
-          claimableAmount,
-        ] = await Promise.all([
-          // this.SaleVaultProxy.calculTier(this.l2Token, this.account),
-          this.SaleVaultProxy.user1rd(this.l2Token, this.account),
-          this.SaleVaultProxy.user2rd(this.l2Token, this.account),
-          this.SaleVaultProxy.calculClaimAmount(this.l2Token, this.account, 1),
-        ]);
+        const [tier, round1Info, round2Info, claimableAmount] =
+          await Promise.all([
+            this.SaleVaultProxy.calculTier(this.l2Token, this.account),
+            this.SaleVaultProxy.user1rd(this.l2Token, this.account),
+            this.SaleVaultProxy.user2rd(this.l2Token, this.account),
+            this.SaleVaultProxy.calculClaimAmount(
+              this.l2Token,
+              this.account,
+              1,
+            ),
+          ]);
 
         const userInfoRound1 = {
           paidRound1: Number(formatEther(round1Info.payAmount)),
